@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    
+    ul {
+      list-style: none;
+    }
+    
+    img {
+      vertical-align: top;
+    }
+    
+    /*取消图片底部3像素距离*/
+    .box {
+      width: 300px;
+      height: 200px;
+      margin: 100px auto;
+      background-color: pink;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .box ul li {
+      float: left;
+    }
+    
+    .box ul {
+      width: 1500px;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="box" id="screen">
+  <ul>
+    <li><img src="images/01.jpg" alt=""/></li>
+    <li><img src="images/02.jpg" alt=""/></li>
+    <li><img src="images/03.jpg" alt=""/></li>
+    <li><img src="images/04.jpg" alt=""/></li>
+    <!--放置了一个假的第一张，为了制作无缝滚动效果-->
+    <li><img src="images/01.jpg" alt=""/></li>
+  </ul>
+</div>
+<script>
+  //当前效果不是让元素运动到某个位置后停止，所以不适用与animate的使用，只需要设置一个简单运动即可。
+  //无缝滚动效果的关键点：1 假的第一张图片的设置   2 找到需要进行抽回操作的位置
+  //1 获取元素
+  var screenBox = document.getElementById("screen");//可视区域
+  var list = screenBox.children[0];//运动的ul
+  var lisLen = list.children.length;//图片的个数
+  var imgWid = screenBox.offsetWidth;//图片宽度
+  
+  //2 设置简单运动的代码
+  setInterval(function () {
+    //2.1 获取元素当前位置
+    var current = list.offsetLeft;
+    //2.2 设置步长
+    var step = -100;
+    
+    //我们发现，假的第一张显示完全的位置为current的最小值，如果小于了最小值，设置list抽回到left为0的位置
+    if (current > -(lisLen - 1) * imgWid) {
+      //2.3 套用运动公式
+      current = current + step;
+      //2.4 将新的位置设置给元素进行运动
+      list.style.left = current + "px";
+    } else {
+      //2.5 抽回操作
+      //抽回时，第一张图片的显示位置和假的第一张显示位置重合，会出现"卡顿"的现象，可以在抽回时，设置left值为step的长度
+      list.style.left = step + "px";
+    }
+  }, 400);
+
+
+</script>
+</body>
+</html>
